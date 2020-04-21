@@ -7,7 +7,7 @@ Before running bot.py, you need to:
 5. ToonTown must be put in Windowed Mode. Screen should be maximized.
 
 This bot works by controlling mouse and keyboard input, not TTR itself.
-You probably won't be able to work done while running.
+You probably won't be able to multitask while bot is running.
 
 Pixel coordinates are given as per pyautogui format: (left, top, length, height)
 
