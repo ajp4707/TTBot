@@ -11,7 +11,7 @@ from math import sqrt, degrees, atan2
 import os
 import logging
 
-logging.basicConfig(filename=f'C:/Users/ajp47/Desktop/combatLogs/cb{time.strftime("%m%d%y.%H%M", time.localtime())}.txt',level=logging.INFO)
+#logging.basicConfig(filename=f'C:/Users/ajp47/Desktop/combatLogs/cb{time.strftime("%m%d%y.%H%M", time.localtime())}.txt',level=logging.INFO)
 logging.info("Log created")
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = True
@@ -19,19 +19,19 @@ pyautogui.FAILSAFE = True
 #EDIT THIS Directory if needed
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 # Time limit of program in seconds
-TIMELIMIT = 7200
+TIMELIMIT = 28800
 # EDIT BELOW AREA!!!!
-# Each cell represents a gag type. The value of the cell is how many gags allowed to be had at once.
+# WANTEDGAGS: Each cell represents a gag type. The value of the cell is how many gags allowed to be had at once.
 #                        COL
-WANTEDGAGS =   [#0  1  2  3  4  5  6
-                [0, 0, 0, 0, 0, 0, 0], #toonup 0
-                [0, 0, 0, 0, 0, 0, 0], #trap   1
-                [0, 0, 0, 0, 0, 0, 0], #lure   2
-                [0, 5, 5, 0, 0, 0, 0], #sound  3    ROW
-                [0, 0, 5, 5, 0, 0, 0], #throw  4
-                [0, 0, 5, 5, 0, 0, 0], #squirt 5
-                [0, 0, 0, 0, 0, 0, 0], #drop   6
-                ]
+WANTEDGAGS =[#   Lvl 0  1  2  3  4  5  6
+                    [0, 0, 0, 0, 0, 0, 0], #toonup 0
+                    [0, 0, 0, 0, 0, 0, 0], #trap   1
+                    [0, 0, 0, 0, 0, 0, 0], #lure   2
+                    [0, 5, 5, 0, 0, 0, 0], #sound  3    ROW
+                    [0, 0, 5, 5, 0, 0, 0], #throw  4
+                    [0, 0, 5, 5, 0, 0, 0], #squirt 5
+                    [0, 0, 0, 0, 0, 0, 0], #drop   6
+            ]
 
 PRIORITYLIST = [(3,2), (4,3), (5,3), (3,1), (4,2), (5,2), (4,1), (5,1)] 
 # Tuples are (row, col) coordinates of the above table^
@@ -39,8 +39,8 @@ PRIORITYLIST = [(3,2), (4,3), (5,3), (3,1), (4,2), (5,2), (4,1), (5,1)]
 #STOP EDITING
 
 # gag image paths
-gp = [[f'images/gags/{i}{j}.png' for j in range(7)] for i in range(7)]
-gpb = [[f'images/gags/{i}{j}b.png' for j in range(7)] for i in range(7)]
+gp = [[(f'images/gags/{i}{j}.png', f'images/gags/{i}{j}o.png') for j in range(7)] for i in range(7)]
+gpb = [[(f'images/gags/{i}{j}b.png', f'images/gags/{i}{j}ob.png') for j in range(7)] for i in range(7)]
 
 gagList = []
 gagListB = []
@@ -103,19 +103,21 @@ def combatLoop():
             time.sleep(2) 
 #clicks on gags in order of PRIORITYLIST. Attempts to pick gags that will reward XP
 def clickGag():
-    for gag in gagList:
-        butt = pyautogui.locateCenterOnScreen(gag, confidence = 0.99, region=(375, 250, 1125, 500))
-        if butt: 
-            pyautogui.click(butt)
-            logging.info("Threw " + gag)
-            return
+    for pair in gagList:
+        for gag in pair:
+            butt = pyautogui.locateCenterOnScreen(gag, confidence = 0.99, region=(375, 250, 1125, 500))
+            if butt: 
+                pyautogui.click(butt)
+                logging.info("Threw " + gag)
+                return
     # if none are available
-    for gag in gagListB:
-        butt = pyautogui.locateCenterOnScreen(gag, confidence = 0.99, region=(375, 250, 1125, 500))
-        if butt: 
-            pyautogui.click(butt)
-            logging.info("Threw " + gag)
-            return
+    for pair in gagListB:
+        for gag in pair:
+            butt = pyautogui.locateCenterOnScreen(gag, confidence = 0.99, region=(375, 250, 1125, 500))
+            if butt: 
+                pyautogui.click(butt)
+                logging.info("Threw " + gag)
+                return
 def clickArrow():
     arrow = pyautogui.locateCenterOnScreen('images/arrow.png')
     if arrow:
